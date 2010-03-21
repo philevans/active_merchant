@@ -1,15 +1,15 @@
 require File.dirname(__FILE__) + '/../../test_helper'
 require 'mechanize'
 
-class RemoteProtxThreeDSecureTest < Test::Unit::TestCase
-  # Run the tests in the test environment and ensure 3D Secure is enabled on your ProTX account settings
+class RemoteSagePayThreeDSecureTest < Test::Unit::TestCase
+  # Run the tests in the test environment and ensure 3D Secure is enabled on your SagePay account settings
   # set to true to run the tests in the simulated environment
-  ProtxGateway.simulate = false
+  SagePayGateway.simulate = false
 
   TEST_3D_PASSWORD = 'password'
 
   def setup
-    @gateway = ProtxGateway.new(fixtures(:protx).merge(:enable_3d_secure => true))
+    @gateway = SagePayGateway.new(fixtures(:sage_pay).merge(:enable_3d_secure => true))
 
     @amex = CreditCard.new(
       :number => '374200000000004',
@@ -228,9 +228,9 @@ class RemoteProtxThreeDSecureTest < Test::Unit::TestCase
   end
 
   def test_invalid_login
-    message = ProtxGateway.simulate ? 'VSP Simulator cannot find your vendor name.  Ensure you have have supplied a Vendor field with your VSP Vendor name assigned to it.' : '3034 : The Vendor or VendorName value is required.' 
+    message = SagePayGateway.simulate ? 'VSP Simulator cannot find your vendor name.  Ensure you have have supplied a Vendor field with your VSP Vendor name assigned to it.' : '3034 : The Vendor or VendorName value is required.'
 
-    gateway = ProtxGateway.new(
+    gateway = SagePayGateway.new(
         :login => ''
     )
     assert response = gateway.purchase(@amount, @mastercard, @options)
