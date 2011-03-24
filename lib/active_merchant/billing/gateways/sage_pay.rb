@@ -16,7 +16,8 @@ module ActiveMerchant #:nodoc:
         :authorization => 'DEFERRED',
         :capture => 'RELEASE',
         :void => 'VOID',
-        :abort => 'ABORT'
+        :abort => 'ABORT',
+        :repeat => 'REPEAT'
       }
       
       CREDIT_CARDS = {
@@ -125,9 +126,25 @@ module ActiveMerchant #:nodoc:
         commit(:credit, post)
       end
       
+      def repeat(money, identification, description, options = {})
+        post = {}
+        add_invoice(post, options)
+        add_credit_reference(post, identification)
+        add_amount(post, money, options)
+        add_pair(post, :Description, description)
+        commit(:repeat, post)
+      end
+    
+      def abort(identification, options = {})
+        post = {}
+        add_reference(post, identification)
+        commit(:abort, post)
+      end
+                                                                                                
+      
       # Completes a 3D Secure transaction
-      def three_d_complete(pa_res, md)
-        commit(:three_d_complete, 'PARes' => pa_res, 'MD' => md)
+      def three_d_complete(pa_res, md, vendor_tx_code)
+        commit(:three_d_complete, 'PARes' => pa_res, 'MD' => md, :VendorTxCode => vendor_tx_code)
       end
       
       private
