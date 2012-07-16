@@ -75,6 +75,7 @@ module ActiveMerchant #:nodoc:
         add_address(post, options)
         add_customer_data(post, options)
         add_three_d_secure_flag(post, options)
+        add_account_type(post, options)
         
         commit(:purchase, post)
       end
@@ -90,6 +91,7 @@ module ActiveMerchant #:nodoc:
         add_address(post, options)
         add_customer_data(post, options)
         add_three_d_secure_flag(post, options)
+        add_account_type(post, options)
         
         commit(:authorization, post)
       end
@@ -180,6 +182,10 @@ module ActiveMerchant #:nodoc:
         add_pair(post, :CustomerEMail, options[:email][0,255]) unless options[:email].blank?
         add_pair(post, :BillingPhone, options[:phone].gsub(/[^0-9+]/, '')[0,20]) unless options[:phone].blank?
         add_pair(post, :ClientIPAddress, options[:ip])
+      end
+
+      def add_account_type(post, options)
+        add_pair(post, :AccountType, options[:account_type]) if options[:account_type]
       end
       
       def add_three_d_secure_flag(post, options)
